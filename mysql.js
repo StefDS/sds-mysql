@@ -12,9 +12,10 @@ SQLconn.connect((err) => {
   if (err) throw err;
   console.log('Connected!');
 });
-SQLconn.query('SELECT value, status, ts from DistanceData order by ts DESC LIMIT 50', funtion (err,rows) {
+SQLconn.query('SELECT value, status, ts from DistanceData order by ts DESC LIMIT 50', function (err, rows, fields) {
     if (!err)
         console.log('Data received from Db:');
     else     
         console.log('Error while performing Query.');
   });
+  SQLconn.end();
