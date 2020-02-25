@@ -13,8 +13,10 @@ SQLconn.connect((err) => {
   console.log('Connected!');
 });
 SQLconn.query('SELECT value, status, ts from DistanceData order by ts DESC LIMIT 50', function (err, rows, fields) {
-    if (!err)
+    if (!err)  {
         console.log('Data received from Db:');
+        console.log(fields);
+      }
     else     
         console.log('Error while performing Query.');
   });
