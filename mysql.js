@@ -5,10 +5,22 @@ var myip = require('ip');
 var myos = require('os');
 var http = require('http');
 var RetRecords = [];
-const hostname = '0.0.0.0';
-// const port = 8088;
-const port = 4000;
 //
+// read Config file
+//
+var config = require('config');
+let WEBhost = config.get('web.host');
+let WEBport = config.get('web.port');
+let SQLhost = config.get('sql.host');
+let SQLuser = config.get('sql.user');
+let SQLpassword = config.get('sql.password');
+let SQLport = config.get('sql.port');
+let SQLDatabase = config.get('sql.database');
+let SQLquery =  config.get('sql.query');
+/*
+const hostname = '0.0.0.0';
+const port = 4000;
+*/
 // Define Webserver hookup
 //
 const server = http.createServer((req, res) => {
@@ -30,33 +42,40 @@ const server = http.createServer((req, res) => {
   //
   const mysql = require('mysql');
   const SQLconn = mysql.createConnection({
-    host: '192.168.2.2',
-    user: 'user',
-    password: 'HPE!nvent',
-    database: 'sample'
+    host: SQLhost,
+    user: SQLuser,
+    port: SQLport,
+    password: SQLpassword,
+    database: SQLDatabase
   });
   SQLconn.connect((err) => {
-    if (err) throw err;
-    console.log('Connected!');
+    if(err){
+      res.write("<b>*!!* ERROR connecting to Database  on host: " + SQLhost + " *!!*</b><br>");
+      res.end();
+      console.log('Error connecting to Database on host: ' + SQLhost);
+      //process.exit();
+      return;
+    }
+    console.log('Connection established');
+    SQLconn.query(SQLquery, function (err, rows) {
+        if (!err)  {
+          RetRecords= JSON.stringify(rows);
+        }
+        else {     
+          res.write("*** No RECORDS RECEIVED ***<br>");
+          console.log('Error while performing Query.');
+        }
+    });
+    res.write("*** JSON Query of last 10 records ***<br>");
+    res.write(RetRecords + "<br>");
+    console.log('=========');
+    console.log(RetRecords);
+    res.end();   
   });  
-  SQLconn.query('SELECT value, status, ts from DistanceData order by ts DESC LIMIT 10', function (err, rows) {
-      if (!err)  {
-        RetRecords= JSON.stringify(rows);
-      }
-      else {     
-        res.write("*** No RECORDS RECEIVED ***<br>");
-        console.log('Error while performing Query.');
-      }
-  });
-  res.write("*** JSON Query of last 10 records ***<br>");
-  res.write(RetRecords + "<br>");
-  console.log('=========');
-  console.log(RetRecords);
-  res.end();   
 });
 
-server.listen(port, hostname, () => {
-  console.log("Server " + hostname.toString() + " listing on port " + port.toString() );
+server.listen(WEBport, WEBhost, () => {
+  console.log("Server " + WEBhost.toString() + " listing on port " + WEBport.toString() );
 });
 
 var callback = function (err, data) {

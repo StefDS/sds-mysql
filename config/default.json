@@ -1,0 +1,14 @@
+{
+   "sql": {
+        "host" : "192.168.2.2",
+        "user" : "user",
+        "password" : "HPE!nvent",
+        "database" : "sample",
+        "port" : "3306",
+        "query" : "SELECT value, status, ts from DistanceData order by ts DESC LIMIT 10"
+    },
+    "web": {
+        "host": "localhost",
+        "port": 4000
+    }
+}
