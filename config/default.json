@@ -8,7 +8,7 @@
         "query" : "SELECT value, status, ts from DistanceData order by ts DESC LIMIT 10"
     },
     "web": {
-        "host": "localhost",
+        "host": "0.0.0.0",
         "port": 4000
     }
 }
