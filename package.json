@@ -8,7 +8,7 @@
     "url": "git+https://github.com/StefDS/sds-mysql.git"
   },
   "dependencies": {
-    "config": "^3.2.6",
+    "config": "^3.3.8",
     "ip": "^1.1.5",
     "mysql": "^2.5.4"
   },
